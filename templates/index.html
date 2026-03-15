@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Score Predictor</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: rgba(255, 255, 255, 0.08);
+            --panel-border: rgba(255, 255, 255, 0.12);
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --accent: #7c3aed;
+            --accent-2: #06b6d4;
+            --success-bg: rgba(16, 185, 129, 0.12);
+            --success-border: rgba(16, 185, 129, 0.4);
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 30%),
+                radial-gradient(circle at top right, rgba(6, 182, 212, 0.22), transparent 28%),
+                linear-gradient(135deg, #0b1020 0%, #111827 45%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 18px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 1180px;
+            display: grid;
+            grid-template-columns: 1.05fr 1.2fr;
+            gap: 28px;
+        }
+
+        .hero,
+        .card {
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .hero {
+            padding: 40px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.35), transparent 70%);
+            filter: blur(20px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            margin: 0 0 14px;
+            font-size: clamp(2rem, 4vw, 3.25rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 540px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .hero-stats {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .stat {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat h3 {
+            margin: 0 0 6px;
+            font-size: 15px;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .stat p {
+            margin: 0;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .card {
+            padding: 30px;
+        }
+
+        .card-header {
+            margin-bottom: 22px;
+        }
+
+        .card-header h2 {
+            margin: 0 0 8px;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 14px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .field input::placeholder {
+            color: #94a3b8;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: rgba(124, 58, 237, 0.8);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.16);
+            transform: translateY(-1px);
+        }
+
+        select option {
+            color: #111827;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .btn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary {
+            flex: 1;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.28);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .prediction {
+            margin-top: 22px;
+            padding: 18px;
+            border-radius: 18px;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+        }
+
+        .prediction span {
+            display: block;
+            font-size: 13px;
+            color: #a7f3d0;
+            margin-bottom: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .prediction h3 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        .footer-note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 960px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .card,
+            .hero {
+                padding: 22px;
+                border-radius: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <section class="hero">
+            <div>
+                <div class="badge">FastAPI • ML Inference • Web UI</div>
+                <h1>Modern Student Score Prediction</h1>
+                <p>
+                    A polished inference interface for your trained pipeline. Enter the student attributes,
+                    submit the request, and get the predicted math score instantly.
+                </p>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <h3>Inference Ready</h3>
+                    <p>Works directly with your saved preprocessor and trained model artifacts.</p>
+                </div>
+                <div class="stat">
+                    <h3>MLOps Friendly</h3>
+                    <p>Clean UI for demos, validation, QA checks, and lightweight production usage.</p>
+                </div>
+                <div class="stat">
+                    <h3>FastAPI Native</h3>
+                    <p>Can be served with Jinja templates now and upgraded to React later.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>Prediction Form</h2>
+                <p>Provide the input features used by your trained model.</p>
+            </div>
+
+            <form action="/predict-form" method="post">
+                <div class="grid">
+                    <div class="field">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="race_ethnicity">Race / Ethnicity</label>
+                        <select id="race_ethnicity" name="race_ethnicity" required>
+                            <option value="">Select group</option>
+                            <option value="group A">group A</option>
+                            <option value="group B">group B</option>
+                            <option value="group C">group C</option>
+                            <option value="group D">group D</option>
+                            <option value="group E">group E</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="field">
+                        <label for="parental_level_of_education">Parental Education</label>
+                        <select id="parental_level_of_education" name="parental_level_of_education" required>
+                            <option value="">Select education level</option>
+                            <option value="some high school">some high school</option>
+                            <option value="high school">high school</option>
+                            <option value="some college">some college</option>
+                            <option value="associate's degree">associate's degree</option>
+                            <option value="bachelor's degree">bachelor's degree</option>
+                            <option value="master's degree">master's degree</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="lunch">Lunch</label>
+                        <select id="lunch" name="lunch" required>
+                            <option value="">Select lunch type</option>
+                            <option value="standard">standard</option>
+                            <option value="free/reduced">free/reduced</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="field">
+                        <label for="test_preparation_course">Test Preparation</label>
+                        <select id="test_preparation_course" name="test_preparation_course" required>
+                            <option value="">Select preparation</option>
+                            <option value="none">none</option>
+                            <option value="completed">completed</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="reading_score">Reading Score</label>
+                        <input
+                            id="reading_score"
+                            type="number"
+                            step="any"
+                            name="reading_score"
+                            placeholder="e.g. 72"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="writing_score">Writing Score</label>
+                    <input
+                        id="writing_score"
+                        type="number"
+                        step="any"
+                        name="writing_score"
+                        placeholder="e.g. 74"
+                        required
+                    />
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit">Predict Math Score</button>
+                    <button class="btn btn-secondary" type="reset">Reset</button>
+                </div>
+            </form>
+
+            {% if prediction is not none %}
+            <div class="prediction">
+                <span>Prediction Result</span>
+                <h3>{{ prediction }}</h3>
+            </div>
+            {% endif %}
+
+            <div class="footer-note">
+                This UI is server-rendered with Jinja, so it stays simple to deploy while still looking modern.
+            </div>
+        </section>
+    </div>
+</body>
+</html>
