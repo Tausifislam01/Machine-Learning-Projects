@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Score Predictor</title>
+    <title>Student Performance Estimator</title>
     <style>
         :root {
-            --bg: #0b1020;
-            --panel: rgba(255, 255, 255, 0.08);
-            --panel-border: rgba(255, 255, 255, 0.12);
-            --text: #f8fafc;
-            --muted: #cbd5e1;
-            --accent: #7c3aed;
-            --accent-2: #06b6d4;
-            --success-bg: rgba(16, 185, 129, 0.12);
-            --success-border: rgba(16, 185, 129, 0.4);
-            --input-bg: rgba(255, 255, 255, 0.06);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-            --radius: 24px;
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --text: #172033;
+            --muted: #667085;
+            --line: #dbe4f0;
+            --primary: #1d4ed8;
+            --accent: #0f766e;
+            --success-bg: #ecfdf3;
+            --success-border: #a7f3d0;
+            --success-text: #065f46;
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+            --radius-xl: 24px;
+            --radius-md: 14px;
         }
 
         * {
@@ -26,137 +28,191 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--text);
             background:
-                radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 30%),
-                radial-gradient(circle at top right, rgba(6, 182, 212, 0.22), transparent 28%),
-                linear-gradient(135deg, #0b1020 0%, #111827 45%, #0f172a 100%);
+                radial-gradient(circle at top left, rgba(29, 78, 216, 0.08), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.08), transparent 24%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        .page {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 32px 18px;
+            padding: 36px 18px;
         }
 
-        .shell {
+        .layout {
             width: 100%;
-            max-width: 1180px;
+            max-width: 1220px;
             display: grid;
-            grid-template-columns: 1.05fr 1.2fr;
-            gap: 28px;
-        }
-
-        .hero,
-        .card {
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            background: var(--panel);
-            border: 1px solid var(--panel-border);
+            grid-template-columns: 420px 1fr;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 28px;
+            overflow: hidden;
             box-shadow: var(--shadow);
-            border-radius: var(--radius);
+            backdrop-filter: blur(12px);
         }
 
-        .hero {
-            padding: 40px 34px;
+        .sidebar {
+            position: relative;
+            padding: 38px 30px;
+            background: linear-gradient(180deg, rgba(29, 78, 216, 0.96), rgba(15, 23, 42, 0.96));
+            color: #fff;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            position: relative;
+            justify-content: center;
         }
 
-        .hero::before {
+        .sidebar::after {
             content: "";
             position: absolute;
-            inset: auto -60px -60px auto;
+            inset: auto -80px -80px auto;
             width: 220px;
             height: 220px;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.35), transparent 70%);
-            filter: blur(20px);
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            width: fit-content;
-            padding: 8px 14px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.08);
-            color: #dbeafe;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            margin-bottom: 22px;
+            filter: blur(10px);
         }
 
-        .hero h1 {
-            margin: 0 0 14px;
-            font-size: clamp(2rem, 4vw, 3.25rem);
-            line-height: 1.05;
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .sidebar h1 {
+            margin: 20px 0 14px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+        }
+
+        .sidebar p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 15px;
+            line-height: 1.75;
+            max-width: 420px;
+        }
+
+        .content {
+            padding: 34px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,250,252,0.96));
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand small {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .brand h2 {
+            margin: 0;
+            font-size: 1.7rem;
             letter-spacing: -0.03em;
         }
 
-        .hero p {
-            margin: 0;
-            max-width: 540px;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.7;
-        }
-
-        .hero-stats {
-            margin-top: 34px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .stat {
-            padding: 18px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .stat h3 {
-            margin: 0 0 6px;
-            font-size: 15px;
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-
-        .stat p {
-            margin: 0;
+        .topbar-note {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: var(--primary);
             font-size: 13px;
-            color: #94a3b8;
-            line-height: 1.5;
+            font-weight: 700;
+            border: 1px solid #dbeafe;
+            white-space: nowrap;
         }
 
-        .card {
-            padding: 30px;
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
         }
 
-        .card-header {
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
             margin-bottom: 22px;
         }
 
-        .card-header h2 {
+        .panel-header h3 {
             margin: 0 0 8px;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             letter-spacing: -0.02em;
         }
 
-        .card-header p {
+        .panel-header p {
             margin: 0;
             color: var(--muted);
             font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .mini-card {
+            min-width: 145px;
+            padding: 14px;
+            border-radius: 18px;
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+        }
+
+        .mini-card strong {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .mini-card span {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text);
         }
 
         form {
             display: grid;
             gap: 18px;
+        }
+
+        .section-title {
+            margin: 8px 0 -2px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .grid {
@@ -173,41 +229,53 @@
 
         .field label {
             font-size: 13px;
-            font-weight: 600;
-            color: #e5e7eb;
+            font-weight: 700;
+            color: #344054;
         }
 
         .field input,
         .field select {
             width: 100%;
-            padding: 14px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: var(--input-bg);
-            color: var(--text);
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 14px 15px;
             font-size: 14px;
+            color: var(--text);
             outline: none;
-            transition: 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
         .field input::placeholder {
-            color: #94a3b8;
+            color: #98a2b3;
         }
 
         .field input:focus,
         .field select:focus {
-            border-color: rgba(124, 58, 237, 0.8);
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.16);
+            border-color: rgba(29, 78, 216, 0.55);
+            box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.12);
             transform: translateY(-1px);
         }
 
-        select option {
-            color: #111827;
+        .field-hint {
+            margin-top: -2px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 18px;
+            border-radius: 18px;
+            background: #f8fbff;
+            border: 1px dashed #c7d7fe;
         }
 
         .actions {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 12px;
             margin-top: 4px;
         }
@@ -216,89 +284,110 @@
             appearance: none;
             border: none;
             cursor: pointer;
-            padding: 14px 18px;
             border-radius: 14px;
+            padding: 14px 18px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary {
             flex: 1;
-            color: white;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.28);
+            min-width: 220px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 12px 22px rgba(29, 78, 216, 0.18);
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            filter: brightness(1.05);
+            filter: brightness(1.03);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: #e2e8f0;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #fff;
+            color: var(--text);
+            border: 1px solid var(--line);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: #f8fafc;
         }
 
         .prediction {
             margin-top: 22px;
-            padding: 18px;
-            border-radius: 18px;
+            display: grid;
+            gap: 10px;
+            padding: 22px;
+            border-radius: 20px;
             background: var(--success-bg);
             border: 1px solid var(--success-border);
         }
 
         .prediction span {
-            display: block;
-            font-size: 13px;
-            color: #a7f3d0;
-            margin-bottom: 6px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--success-text);
             letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .prediction h3 {
             margin: 0;
-            font-size: 2rem;
-            letter-spacing: -0.03em;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: #064e3b;
+        }
+
+        .prediction p {
+            margin: 0;
+            font-size: 14px;
+            color: #166534;
+            line-height: 1.65;
         }
 
         .footer-note {
-            margin-top: 14px;
+            margin-top: 18px;
             font-size: 12px;
-            color: #94a3b8;
-            line-height: 1.6;
+            color: var(--muted);
+            line-height: 1.7;
         }
 
-        @media (max-width: 960px) {
-            .shell {
+        @media (max-width: 1080px) {
+            .layout {
                 grid-template-columns: 1fr;
             }
 
-            .hero-stats {
-                grid-template-columns: 1fr;
+            .sidebar {
+                padding-bottom: 28px;
             }
         }
 
-        @media (max-width: 640px) {
-            .card,
-            .hero {
-                padding: 22px;
-                border-radius: 20px;
+        @media (max-width: 720px) {
+            .content,
+            .sidebar {
+                padding: 24px;
             }
 
-            .grid {
+            .grid,
+            .score-grid {
                 grid-template-columns: 1fr;
             }
 
+            .panel-header,
+            .topbar,
             .actions {
                 flex-direction: column;
+                align-items: stretch;
+            }
+
+            .topbar-note {
+                white-space: normal;
             }
 
             .btn {
@@ -308,139 +397,155 @@
     </style>
 </head>
 <body>
-    <div class="shell">
-        <section class="hero">
-            <div>
-                <div class="badge">FastAPI • ML Inference • Web UI</div>
-                <h1>Modern Student Score Prediction</h1>
+    <main class="page">
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="eyebrow">Academic Analytics</div>
+                <h1>Student Score Predictor</h1>
                 <p>
-                    A polished inference interface for your trained pipeline. Enter the student attributes,
-                    submit the request, and get the predicted math score instantly.
+                    Enter the student details and scores to generate a math score prediction.
                 </p>
-            </div>
+            </aside>
 
-            <div class="hero-stats">
-                <div class="stat">
-                    <h3>Inference Ready</h3>
-                    <p>Works directly with your saved preprocessor and trained model artifacts.</p>
+            <section class="content">
+                <div class="topbar">
+                    <div class="brand">
+                        <small>Prediction Workspace</small>
+                        <h2>Enter Student Details</h2>
+                    </div>
+                    <div class="topbar-note">Fast and simple form</div>
                 </div>
-                <div class="stat">
-                    <h3>MLOps Friendly</h3>
-                    <p>Clean UI for demos, validation, QA checks, and lightweight production usage.</p>
-                </div>
-                <div class="stat">
-                    <h3>FastAPI Native</h3>
-                    <p>Can be served with Jinja templates now and upgraded to React later.</p>
-                </div>
-            </div>
-        </section>
 
-        <section class="card">
-            <div class="card-header">
-                <h2>Prediction Form</h2>
-                <p>Provide the input features used by your trained model.</p>
-            </div>
-
-            <form action="/predict-form" method="post">
-                <div class="grid">
-                    <div class="field">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select gender</option>
-                            <option value="male">male</option>
-                            <option value="female">female</option>
-                        </select>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Prediction Form</h3>
+                            <p>
+                                Fill in the student profile and existing subject scores below to estimate
+                                the expected math result.
+                            </p>
+                        </div>
+                        <div class="mini-card">
+                            <strong>Output</strong>
+                            <span>Math Score</span>
+                        </div>
                     </div>
 
-                    <div class="field">
-                        <label for="race_ethnicity">Race / Ethnicity</label>
-                        <select id="race_ethnicity" name="race_ethnicity" required>
-                            <option value="">Select group</option>
-                            <option value="group A">group A</option>
-                            <option value="group B">group B</option>
-                            <option value="group C">group C</option>
-                            <option value="group D">group D</option>
-                            <option value="group E">group E</option>
-                        </select>
+                    {% set form_data = form_data | default({}, true) %}
+
+                    <form action="/predict-form" method="post">
+                        <div class="section-title">Student Profile</div>
+
+                        <div class="grid">
+                            <div class="field">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="male" {% if form_data.get('gender') == 'male' %}selected{% endif %}>male</option>
+                                    <option value="female" {% if form_data.get('gender') == 'female' %}selected{% endif %}>female</option>
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label for="race_ethnicity">Race / Ethnicity</label>
+                                <select id="race_ethnicity" name="race_ethnicity" required>
+                                    <option value="">Select group</option>
+                                    <option value="group A" {% if form_data.get('race_ethnicity') == 'group A' %}selected{% endif %}>group A</option>
+                                    <option value="group B" {% if form_data.get('race_ethnicity') == 'group B' %}selected{% endif %}>group B</option>
+                                    <option value="group C" {% if form_data.get('race_ethnicity') == 'group C' %}selected{% endif %}>group C</option>
+                                    <option value="group D" {% if form_data.get('race_ethnicity') == 'group D' %}selected{% endif %}>group D</option>
+                                    <option value="group E" {% if form_data.get('race_ethnicity') == 'group E' %}selected{% endif %}>group E</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid">
+                            <div class="field">
+                                <label for="parental_level_of_education">Parental Education</label>
+                                <select id="parental_level_of_education" name="parental_level_of_education" required>
+                                    <option value="">Select education level</option>
+                                    <option value="some high school" {% if form_data.get('parental_level_of_education') == 'some high school' %}selected{% endif %}>some high school</option>
+                                    <option value="high school" {% if form_data.get('parental_level_of_education') == 'high school' %}selected{% endif %}>high school</option>
+                                    <option value="some college" {% if form_data.get('parental_level_of_education') == 'some college' %}selected{% endif %}>some college</option>
+                                    <option value="associate's degree" {% if form_data.get('parental_level_of_education') == "associate's degree" %}selected{% endif %}>associate's degree</option>
+                                    <option value="bachelor's degree" {% if form_data.get('parental_level_of_education') == "bachelor's degree" %}selected{% endif %}>bachelor's degree</option>
+                                    <option value="master's degree" {% if form_data.get('parental_level_of_education') == "master's degree" %}selected{% endif %}>master's degree</option>
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label for="lunch">Lunch</label>
+                                <select id="lunch" name="lunch" required>
+                                    <option value="">Select lunch type</option>
+                                    <option value="standard" {% if form_data.get('lunch') == 'standard' %}selected{% endif %}>standard</option>
+                                    <option value="free/reduced" {% if form_data.get('lunch') == 'free/reduced' %}selected{% endif %}>free/reduced</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="section-title">Preparation & Scores</div>
+
+                        <div class="field">
+                            <label for="test_preparation_course">Test Preparation</label>
+                            <select id="test_preparation_course" name="test_preparation_course" required>
+                                <option value="">Select preparation</option>
+                                <option value="none" {% if form_data.get('test_preparation_course') == 'none' %}selected{% endif %}>none</option>
+                                <option value="completed" {% if form_data.get('test_preparation_course') == 'completed' %}selected{% endif %}>completed</option>
+                            </select>
+                            <div class="field-hint">Choose whether the student completed the preparation course.</div>
+                        </div>
+
+                        <div class="score-grid">
+                            <div class="field">
+                                <label for="reading_score">Reading Score</label>
+                                <input
+                                    id="reading_score"
+                                    type="number"
+                                    step="any"
+                                    name="reading_score"
+                                    placeholder="e.g. 72"
+                                    value="{{ form_data.get('reading_score', '') }}"
+                                    required
+                                />
+                            </div>
+
+                            <div class="field">
+                                <label for="writing_score">Writing Score</label>
+                                <input
+                                    id="writing_score"
+                                    type="number"
+                                    step="any"
+                                    name="writing_score"
+                                    placeholder="e.g. 74"
+                                    value="{{ form_data.get('writing_score', '') }}"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn btn-primary" type="submit">Generate Prediction</button>
+                            <a class="btn btn-secondary" href="/">Clear Form</a>
+                        </div>
+                    </form>
+
+                    {% if prediction is not none %}
+                    <div class="prediction">
+                        <span>Predicted Math Score</span>
+                        <h3>{{ prediction }}</h3>
+                        <p>
+                            This value is generated from your trained pipeline using the submitted student attributes
+                            and prior subject scores.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="footer-note">
+                        Enter the details above and submit the form to view the prediction result.
                     </div>
                 </div>
-
-                <div class="grid">
-                    <div class="field">
-                        <label for="parental_level_of_education">Parental Education</label>
-                        <select id="parental_level_of_education" name="parental_level_of_education" required>
-                            <option value="">Select education level</option>
-                            <option value="some high school">some high school</option>
-                            <option value="high school">high school</option>
-                            <option value="some college">some college</option>
-                            <option value="associate's degree">associate's degree</option>
-                            <option value="bachelor's degree">bachelor's degree</option>
-                            <option value="master's degree">master's degree</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="lunch">Lunch</label>
-                        <select id="lunch" name="lunch" required>
-                            <option value="">Select lunch type</option>
-                            <option value="standard">standard</option>
-                            <option value="free/reduced">free/reduced</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid">
-                    <div class="field">
-                        <label for="test_preparation_course">Test Preparation</label>
-                        <select id="test_preparation_course" name="test_preparation_course" required>
-                            <option value="">Select preparation</option>
-                            <option value="none">none</option>
-                            <option value="completed">completed</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="reading_score">Reading Score</label>
-                        <input
-                            id="reading_score"
-                            type="number"
-                            step="any"
-                            name="reading_score"
-                            placeholder="e.g. 72"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="writing_score">Writing Score</label>
-                    <input
-                        id="writing_score"
-                        type="number"
-                        step="any"
-                        name="writing_score"
-                        placeholder="e.g. 74"
-                        required
-                    />
-                </div>
-
-                <div class="actions">
-                    <button class="btn btn-primary" type="submit">Predict Math Score</button>
-                    <button class="btn btn-secondary" type="reset">Reset</button>
-                </div>
-            </form>
-
-            {% if prediction is not none %}
-            <div class="prediction">
-                <span>Prediction Result</span>
-                <h3>{{ prediction }}</h3>
-            </div>
-            {% endif %}
-
-            <div class="footer-note">
-                This UI is server-rendered with Jinja, so it stays simple to deploy while still looking modern.
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
+    </main>
 </body>
 </html>

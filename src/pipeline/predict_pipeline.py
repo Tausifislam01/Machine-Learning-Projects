@@ -11,16 +11,20 @@ class PredictPipeline:
         self.model_path = os.path.join("artifacts", "model.pkl")
         self.preprocessor_path = os.path.join("artifacts", "preprocessor.pkl")
 
-    def predict(self, features: pd.DataFrame):
         try:
             with open(self.preprocessor_path, "rb") as preprocessor_file:
-                preprocessor = dill.load(preprocessor_file)
+                self.preprocessor = dill.load(preprocessor_file)
 
             with open(self.model_path, "rb") as model_file:
-                model = dill.load(model_file)
+                self.model = dill.load(model_file)
 
-            data_scaled = preprocessor.transform(features)
-            preds = model.predict(data_scaled)
+        except Exception as e:
+            raise CustomException(e, sys)
+
+    def predict(self, features: pd.DataFrame):
+        try:
+            data_scaled = self.preprocessor.transform(features)
+            preds = self.model.predict(data_scaled)
             return preds
 
         except Exception as e:

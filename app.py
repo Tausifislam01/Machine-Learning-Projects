@@ -8,6 +8,7 @@ from src.pipeline.predict_pipeline import PredictPipeline, CustomData
 app = FastAPI(title="Student Performance Prediction API", version="1.0.0")
 
 templates = Jinja2Templates(directory="templates")
+predict_pipeline = PredictPipeline()
 
 
 class PredictionInput(BaseModel):
@@ -27,7 +28,15 @@ def health_check():
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "prediction": None})
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "request": request,
+            "prediction": None,
+            "form_data": {}
+        }
+    )
 
 
 @app.post("/predict")
@@ -43,7 +52,7 @@ def predict_api(payload: PredictionInput):
     )
 
     pred_df = data.get_data_as_data_frame()
-    result = PredictPipeline().predict(pred_df)
+    result = predict_pipeline.predict(pred_df)
 
     return JSONResponse(
         content={
@@ -74,12 +83,24 @@ def predict_form(
     )
 
     pred_df = data.get_data_as_data_frame()
-    result = PredictPipeline().predict(pred_df)
+    result = predict_pipeline.predict(pred_df)
+
+    form_data = {
+        "gender": gender,
+        "race_ethnicity": race_ethnicity,
+        "parental_level_of_education": parental_level_of_education,
+        "lunch": lunch,
+        "test_preparation_course": test_preparation_course,
+        "reading_score": reading_score,
+        "writing_score": writing_score,
+    }
 
     return templates.TemplateResponse(
-        "index.html",
-        {
+        request=request,
+        name="index.html",
+        context={
             "request": request,
             "prediction": round(float(result[0]), 2),
+            "form_data": form_data,
         },
     )
